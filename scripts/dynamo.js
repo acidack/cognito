@@ -11,59 +11,53 @@ window.onload = function(){
             if(session.isValid()){
                 document.getElementById("username").innerHTML = cognitoUser.getUsername();
 
-
-
-                AWS.config.region = 'us-east-1';
+                AWS.config.region = 'ap-southeast-1';
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                    IdentityPoolId: '<<>>',
+                    IdentityPoolId: 'ap-southeast-1:aa70ead9-45f0-4f5d-b862-0ff08cfebd2e',
                     Logins : {
-                        '<<>>' : session.getIdToken().getJwtToken()
+                        'cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_3dbj6x7Wo' : session.getIdToken().getJwtToken()
                     }
                 });
-
 
                 var dynamoClient = new AWS.DynamoDB.DocumentClient();
 
-                var params = {
-                    TableName : 'MVCognito',
-                    Item: {
-                        IdentityId: AWS.config.credentials.identityId,
-                        "Login Count" : 1
-                    },
-                    Expected: {
-                        IdentityId: {
-                            Exists: false
-                        }
-                    }
-                };
+                // var params = {
+                //     TableName : 'MVCognito',
+                //     Item: {
+                //         IdentityId: AWS.config.credentials.identityId,
+                //         "Login Count" : 1
+                //     },
+                //     Expected: {
+                //         IdentityId: {
+                //             Exists: false
+                //         }
+                //     }
+                // };
 
-                dynamoClient.put(params, function(err, data) {
-                    if (err) {
-                        if(err.code == "ConditionalCheckFailedException"){
-                            console.log("That user already exists")
-                        }else{
-                            console.log(err)
-                        }
-                    }
-                    else console.log(data);
-                });
+                // dynamoClient.put(params, function(err, data) {
+                //     if (err) {
+                //         if(err.code == "ConditionalCheckFailedException"){
+                //             console.log("That user already exists")
+                //         }else{
+                //             console.log(err)
+                //         }
+                //     }
+                //     else console.log(data);
+                // });
 
+                // var dynamoClient = new AWS.DynamoDB.DocumentClient();
 
+                // var params = {
+                //     TableName:"MVCognito",
+                //     Key:{
+                //         IdentityId: AWS.config.credentials.identityId
+                //     }
+                // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                // dynamoClient.get(params, function(err,data){
+                //     if(err) console.log(err);
+                //     else console.log(data);
+                // })
 
 
                 // var params = {
@@ -82,18 +76,6 @@ window.onload = function(){
                 //     ]
                 // }
                 // */
-                // });
-
-                // var params = {
-                //     TableName: "MVCognito",
-                //     Key: {
-                //         UserId: AWS.config.credentials.identityId
-                //     }
-                // };
-
-                // dynamoClient.get(params, function(err, data) {
-                //     if (err) console.log(err);
-                //     else console.log(data);
                 // });
 
                 // var params = {
@@ -124,25 +106,24 @@ window.onload = function(){
                 //     else console.log(data);
                 // });
 
-                // window.foo = dynamoClient
+                var params = {
+                    TableName : 'MVCognito',
+                    Key: {
+                        IdentityId: AWS.config.credentials.identityId
+                    },
+                    UpdateExpression: 'set #a = #a + :y',
+                    //ConditionExpression: '#a < :MAX',
+                    ExpressionAttributeNames: {'#a' : 'Login Count'},
+                    ExpressionAttributeValues: {
+                        ':y' : 1//,
+                        //':MAX' : 5
+                    }
+                };
 
-
-                // var params = {
-                //     TableName : 'MVCognito',
-                //     Key: {
-                //         UserId: AWS.config.credentials.identityId
-                //     },
-                //     UpdateExpression: 'set #a = #a + :y',
-                //     // ConditionExpression: '#a < :MAX',
-                //     ExpressionAttributeNames: {'#a' : 'Login Count'},
-                //     ExpressionAttributeValues: {
-                //         ':y' : 1
-                //     }
-                // };
-                // dynamoClient.update(params, function(err, data) {
-                //     if (err) console.log(err);
-                //     else console.log(data);
-                // });
+                dynamoClient.update(params, function(err, data) {
+                    if (err) console.log(err);
+                    else console.log(data);
+                });
 
                 
             };
