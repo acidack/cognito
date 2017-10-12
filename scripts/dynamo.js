@@ -15,9 +15,9 @@ window.onload = function(){
 
                 AWS.config.region = 'us-east-1';
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                    IdentityPoolId: 'us-east-1:d1639820-95ea-4351-972c-f274de6b9117',
+                    IdentityPoolId: '<<>>',
                     Logins : {
-                        'cognito-idp.us-east-1.amazonaws.com/us-east-1_0gZ9xqVyH' : session.getIdToken().getJwtToken()
+                        '<<>>' : session.getIdToken().getJwtToken()
                     }
                 });
 
