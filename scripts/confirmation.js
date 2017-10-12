@@ -22,7 +22,7 @@ document.getElementById("confirmation-submit-button").addEventListener("click", 
             Username : localStorage.getItem("email"),
             Password : localStorage.getItem("password")
         };
-        localStorage.clear()
+        localStorage.clear();
         var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
         cognitoUser.authenticateUser(authenticationDetails, {
